@@ -1,0 +1,118 @@
+﻿@page "/"
+@inherits LapTimesCode
+
+<h2> Lap times</h2>
+
+<div>
+    @if (lapTimes == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <div>
+            <select class="js-example-basic-single" name="state">
+                <option value="AL">Alabama</option>
+                <option value="WY">Wyoming</option>
+            </select>
+        </div>
+
+        <div class="row" style="padding-top:10px">
+            <div class="col-md-4">
+                <select class="form-control" @bind="TrackFilter">
+
+                    <option value="-1">-- Select Track --</option>
+                    @foreach (var track in Tracks)
+                    {
+                        <option value="@track.TrackLength">@track.TrackName</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-control" @bind="CarFilter">
+
+                    <option value="-- Select Car --">-- Select Car --</option>
+                    @foreach (var car in Cars)
+                    {
+                        <option value="@car.VehicleName">@car.VehicleName</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-control" @bind="UserFilter">
+
+                    <option value="-- Select User --">-- Select User --</option>
+                    @foreach (var user in Users)
+                    {
+                        <option value="@user.GamerTag">@user.GamerTag</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <br />
+        <br />
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Track</th>
+                    <th>Car</th>
+                    <th>Lap Time</th>
+                    <th>Sector 1</th>
+                    <th>Sector 2</th>
+                    <th>Sector 3</th>
+                    <th>User</th>
+                    <th>Lap Date</th>
+                    <th>Rain Density</th>
+                    <th>Track Temperature</th>
+                    <th>Ambient Temperature</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var lapTime in lapTimes)
+                {
+                    <tr>
+                        <td>@lapTime.Track?.TrackName</td>
+                        <td>@lapTime.Car?.VehicleName</td>
+                        <td>
+                            @{
+                                TimeSpan time = TimeSpan.FromSeconds(lapTime.LapTime);
+                                string timeString = time.ToString(@"mm\:ss\:fff");
+                                @timeString
+                            }
+                        </td>
+                        <td>
+                            @{
+                                TimeSpan sector1Time = TimeSpan.FromSeconds(lapTime.Sector1);
+                                string sector1 = sector1Time.ToString(@"mm\:ss\:fff");
+                                @sector1
+                            }
+                        </td>
+                        <td>
+                            @{
+                                TimeSpan sector2Time = TimeSpan.FromSeconds(lapTime.Sector2);
+                                string sector2 = sector2Time.ToString(@"mm\:ss\:fff");
+                                @sector2
+                            }
+                        </td>
+                        <td>
+                            @{
+                                TimeSpan sector3Time = TimeSpan.FromSeconds(lapTime.Sector3);
+                                string sector3 = sector3Time.ToString(@"mm\:ss\:fff");
+                                @sector3
+                            }
+                        </td>
+                        <td>@lapTime.ProjectCars2User?.GamerTag</td>
+                        <td>@lapTime.LapDate</td>
+                        <td>@lapTime.RainDensity</td>
+                        <td>@lapTime.TrackTemp</td>
+                        <td>@lapTime.AmbTemp</td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
