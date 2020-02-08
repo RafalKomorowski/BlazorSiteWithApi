@@ -181,3 +181,7 @@ app {
         display: block;
     }
 }
+
+.sort-th {
+    cursor: pointer;
+}

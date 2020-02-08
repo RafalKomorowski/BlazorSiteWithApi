@@ -32,10 +32,10 @@ namespace ProjectCars2.Pages
         protected List<Track> Tracks = null;
         protected List<Car> Cars = null;
         protected List<ProjectCars2User> Users = null;
-
         protected string currentTrack = "";
 
-        public object test { get; set; }
+        protected bool isSortedAscending;
+        protected string activeSortColumn;
 
         #region Properties for filterring
 
@@ -121,13 +121,13 @@ namespace ProjectCars2.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            lapTimes = (await lapTimesService.GetLapTimesAsync()).OrderBy(l => l.Track.TrackName).ThenBy(l => l.Car.VehicleName).ThenBy(l=>l.LapTime).ToArray();
+            lapTimes = (await lapTimesService.GetLapTimesAsync()).OrderBy(l => l.LapTime).ToArray();
             lapTimesBackup = lapTimes;
 
             Tracks = lapTimes
               .GroupBy(p => p.Track.TrackName)
               .Select(g => g.First().Track)
-              .OrderBy(t =>t.TrackName)
+              .OrderBy(t => t.TrackName)
               .ToList();
 
             Cars = lapTimes
@@ -141,6 +141,100 @@ namespace ProjectCars2.Pages
              .Select(g => g.First().ProjectCars2User)
              .OrderBy(u => u.GamerTag)
              .ToList();
+        }
+
+        protected void SortTable(string columnName)
+        {
+            if (!isSortedAscending || activeSortColumn != columnName)
+            {
+                isSortedAscending = true;
+                activeSortColumn = columnName;
+
+                switch (columnName)
+                {
+                    case "Track":
+                        lapTimes = lapTimes.OrderBy(l => l.Track.TrackName).ToArray();
+                        break;
+                    case "Car":
+                        lapTimes = lapTimes.OrderBy(l => l.Car.VehicleName).ToArray();
+                        break;
+                    case "LapTime":
+                        lapTimes = lapTimes.OrderBy(l => l.LapTime).ToArray();
+                        break;
+                    case "Sector1":
+                        lapTimes = lapTimes.OrderBy(l => l.Sector1).ToArray();
+                        break;
+                    case "Sector2":
+                        lapTimes = lapTimes.OrderBy(l => l.Sector2).ToArray();
+                        break;
+                    case "Sector3":
+                        lapTimes = lapTimes.OrderBy(l => l.Sector3).ToArray();
+                        break;
+                    case "User":
+                        lapTimes = lapTimes.OrderBy(l => l.ProjectCars2User.GamerTag).ToArray();
+                        break;
+                    case "LapDate":
+                        lapTimes = lapTimes.OrderBy(l => l.LapDate).ToArray();
+                        break;
+                    case "RainDensity":
+                        lapTimes = lapTimes.OrderBy(l => l.RainDensity).ToArray();
+                        break;
+                    case "TrackTemperature":
+                        lapTimes = lapTimes.OrderBy(l => l.TrackTemp).ToArray();
+                        break;
+                    case "AmbientTemperature":
+                        lapTimes = lapTimes.OrderBy(l => l.AmbTemp).ToArray();
+                        break;
+                    default:
+                        lapTimes = lapTimes.OrderBy(l => l.LapTime).ToArray();
+                        break;
+                }
+            }
+            else
+            {
+                isSortedAscending = false;
+                activeSortColumn = columnName;
+
+                switch (columnName)
+                {
+                    case "Track":
+                        lapTimes = lapTimes.OrderByDescending(l => l.Track.TrackName).ToArray();
+                        break;
+                    case "Car":
+                        lapTimes = lapTimes.OrderByDescending(l => l.Car.VehicleName).ToArray();
+                        break;
+                    case "LapTime":
+                        lapTimes = lapTimes.OrderByDescending(l => l.LapTime).ToArray();
+                        break;
+                    case "Sector1":
+                        lapTimes = lapTimes.OrderByDescending(l => l.Sector1).ToArray();
+                        break;
+                    case "Sector2":
+                        lapTimes = lapTimes.OrderByDescending(l => l.Sector2).ToArray();
+                        break;
+                    case "Sector3":
+                        lapTimes = lapTimes.OrderByDescending(l => l.Sector3).ToArray();
+                        break;
+                    case "User":
+                        lapTimes = lapTimes.OrderByDescending(l => l.ProjectCars2User.GamerTag).ToArray();
+                        break;
+                    case "LapDate":
+                        lapTimes = lapTimes.OrderByDescending(l => l.LapDate).ToArray();
+                        break;
+                    case "RainDensity":
+                        lapTimes = lapTimes.OrderByDescending(l => l.RainDensity).ToArray();
+                        break;
+                    case "TrackTemperature":
+                        lapTimes = lapTimes.OrderByDescending(l => l.TrackTemp).ToArray();
+                        break;
+                    case "AmbientTemperature":
+                        lapTimes = lapTimes.OrderByDescending(l => l.AmbTemp).ToArray();
+                        break;
+                    default:
+                        lapTimes = lapTimes.OrderByDescending(l => l.LapTime).ToArray();
+                        break;
+                }
+            }
         }
     }
 }
